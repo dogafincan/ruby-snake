@@ -1,4 +1,4 @@
-class Board
+class GameWindow
 end
 
 class Snake
