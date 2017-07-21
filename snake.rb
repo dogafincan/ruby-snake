@@ -28,7 +28,7 @@ class Field
     horizontal_middle = width / 2
     vertical_middle = length / 2
     # Are the horizontal and vertical middles in the right order?
-    Curses.setpos(horizontal_middle, vertical_middle)
+    Curses.setpos(vertical_middle, horizontal_middle)
   end
 
   def game_over
