@@ -9,4 +9,5 @@ class Snake
 end
 
 class Apple
+    attr_reader :location
 end
