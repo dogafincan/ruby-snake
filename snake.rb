@@ -1,7 +1,7 @@
 require 'curses'
 
 class Field
-  attr_reader :part, :width, :length
+  attr_reader :part, :width, :length, :area
 
   def initialize(width, length)
     @width = width
@@ -10,16 +10,14 @@ class Field
     @area = Array.new(length) { Array.new(width, @part) }
   end
 
-  def center
+  def center_position
     horizontal_middle = width / 2
     vertical_middle = length / 2
     Curses.setpos(horizontal_middle, horizontal_middle)
   end
 
   def game_over
-    # Perhaps the centering should be moved
-    # so it can be reused in other places.
-    center
+    center_position
     Curses.addstr('Game Over')
     Curses.refresh
     Curses.getch
