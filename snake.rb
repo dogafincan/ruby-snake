@@ -8,9 +8,9 @@ class Field
   end
 
   def game_over
-    x = Curses.cols / 2
-    y = Curses.lines / 2
-    Curses.setpos(y, x)
+    horizontal_middle = Curses.cols / 2
+    vertical_middle = Curses.lines / 2
+    Curses.setpos(vertical_middle, horizontal_middle)
     Curses.addstr('Game Over')
     Curses.getch
   end
