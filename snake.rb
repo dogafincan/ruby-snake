@@ -1,7 +1,16 @@
 require 'curses'
 
 class Field
-    attr_reader :area
+  attr_reader :area
+
+  Curses.init_screen
+  Curses.noecho
+
+  begin
+    
+  ensure
+    Curses.close_screen
+  end
 end
 
 class Snake
