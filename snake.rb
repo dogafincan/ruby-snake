@@ -1,7 +1,7 @@
 require 'curses'
 
 class Field
-  attr_reader :area
+  attr_reader :part, :area
 
   Curses.init_screen
   Curses.noecho
@@ -14,9 +14,9 @@ class Field
 end
 
 class Snake
-    attr_reader :size, :direction
+    attr_reader :part, :size, :direction
 end
 
 class Apple
-    attr_reader :location
+    attr_reader :part, :location
 end
