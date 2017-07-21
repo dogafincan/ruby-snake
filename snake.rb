@@ -1,4 +1,4 @@
-class GameWindow
+class Field
 end
 
 class Snake
