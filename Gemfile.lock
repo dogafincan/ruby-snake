@@ -1,0 +1,13 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    curses (1.2.3)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  curses
+
+BUNDLED WITH
+   1.15.2
