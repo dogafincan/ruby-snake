@@ -10,6 +10,7 @@ class Field
     @field_matrix = Array.new(length) { Array.new(width, ' . ') }
   end
 
+  # Write matrix_to_string method to decrease size of print.
   def print
     field_string = ''
     @length.times do |line|
@@ -30,6 +31,7 @@ class Field
     Curses.setpos(vertical_middle, horizontal_middle)
   end
 
+  # move this method to game class?
   def game_over
     set_center
     Curses.addstr('Game Over')
@@ -57,13 +59,29 @@ end
 
 # Should the code below be in a Game class?
 Curses.init_screen
-Curses.noecho
-Curses.curs_set(0)
 
 begin
+  Curses.stdscr.keypad = true
+  Curses.noecho
+  Curses.curs_set(0)
+  Curses.timeout = 0
   field = Field.new(15, 15)
-  while true
+
+  loop do
     field.print
+    sleep(0.1)
+
+    user_input = Curses.getch
+    case user_input
+    when Curses::KEY_UP
+      snake.move_up
+    when Curses::KEY_DOWN
+      snake.move_down
+    when Curses::KEY_LEFT
+      snake.move_left
+    when Curses::KEY_RIGHT
+      snake.move_right
+    end
   end
   # field.game_over
 ensure
