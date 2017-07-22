@@ -1,5 +1,6 @@
 require 'curses'
 
+# Split up classes into seperate files.
 class Field
   # Remove unnecessary reader attributes.
   attr_reader :width, :length, :field_matrix
@@ -46,6 +47,14 @@ class Snake
   attr_reader :part, :size, :direction
 
   def initialize
+    @direction = 'right'
+    @snake_array = Array.new(4) { |snake_part| [0, snake_part] }
+  end
+
+  def change_direction
+  end
+
+  def move
   end
 end
 
