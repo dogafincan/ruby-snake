@@ -10,7 +10,7 @@ class Field
     @field_matrix = Array.new(length) { Array.new(width, ' . ') }
   end
 
-  def display
+  def print
     field_string = ''
     @length.times do |line|
       @width.times do |column|
@@ -23,7 +23,7 @@ class Field
     Curses.refresh
   end
 
-  def center_position
+  def set_center
     horizontal_middle = width / 2
     vertical_middle = length / 2
     # Are the horizontal and vertical middles in the right order?
@@ -31,7 +31,7 @@ class Field
   end
 
   def game_over
-    center_position
+    set_center
     Curses.addstr('Game Over')
     Curses.refresh
     # What does this getch function do exactly?
@@ -63,7 +63,7 @@ Curses.curs_set(0)
 begin
   field = Field.new(15, 15)
   while true
-    field.display
+    field.print
   end
   # field.game_over
 ensure
