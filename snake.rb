@@ -2,20 +2,19 @@ require 'curses'
 
 class Field
   # Remove unnecessary reader attributes.
-  attr_reader :part, :width, :length, :area
+  attr_reader :width, :length, :field_matrix
 
   def initialize(width, length)
     @width = width
     @length = length
-    @part = ' . '
-    @area = Array.new(length) { Array.new(width, @part) }
+    @field_matrix = Array.new(length) { Array.new(width, ' . ') }
   end
 
   def display
     field_string = ''
     @length.times do |line|
       @width.times do |column|
-        field_string << @area[line][column]
+        field_string << @field_matrix[line][column]
       end
       field_string << "\n"
     end
@@ -35,6 +34,7 @@ class Field
     center_position
     Curses.addstr('Game Over')
     Curses.refresh
+    # What does this getch function do exactly?
     Curses.getch
   end
 end
@@ -55,6 +55,7 @@ class Apple
   end
 end
 
+# Should the code below be in a Game class?
 Curses.init_screen
 Curses.noecho
 Curses.curs_set(0)
