@@ -2,17 +2,20 @@ require 'curses'
 
 # Split up classes into seperate files.
 class Field
-  # Remove unnecessary reader attributes.
-  attr_reader :width, :length, :field_matrix
+
+  attr_reader :apple, :width, :length
 
   def initialize(width, length)
     @width = width
     @length = length
     @field_matrix = Array.new(length) { Array.new(width, ' . ') }
+    @apple = Apple.new
   end
 
   # Write matrix_to_string method to decrease size of print.
   def print
+    @apple.add(15, 15)
+
     field_string = ''
     @length.times do |line|
       @width.times do |column|
@@ -26,8 +29,8 @@ class Field
   end
 
   def set_center
-    horizontal_middle = width / 2
-    vertical_middle = length / 2
+    horizontal_middle = @width / 2
+    vertical_middle = @length / 2
     # Are the horizontal and vertical middles in the right order?
     Curses.setpos(vertical_middle, horizontal_middle)
   end
@@ -43,12 +46,9 @@ class Field
 end
 
 class Snake
-  # Remove unnecessary reader attributes.
-  attr_reader :part, :size, :direction
-
   def initialize
     @direction = 'right'
-    @snake_array = Array.new(4) { |snake_part| [0, snake_part] }
+    @location = Array.new(4) { |snake_part| [0, snake_part] }
   end
 
   def change_direction
@@ -59,11 +59,19 @@ class Snake
 end
 
 class Apple
-  # Remove unnecessary reader attributes.
-  attr_reader :part, :location
-
   def initialize
   end
+
+  def add(length, width)
+    loop do
+      vertical_location = rand(length)
+      horizontal_location = rand(width)
+      field.field_matrix[vertical_location][horizontal_location] = ' o '
+    end
+  end
+end
+
+class Game
 end
 
 # Should the code below be in a Game class?
