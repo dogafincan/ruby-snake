@@ -1,47 +1,16 @@
 require 'curses'
 
-# Split up classes into seperate files.
 class Field
-
-  attr_reader :apple, :width, :length
+  attr_reader :length, :width, :field_matrix
 
   def initialize(width, length)
-    @width = width
     @length = length
+    @width = width
+    create_field
+  end
+
+  def create_field
     @field_matrix = Array.new(length) { Array.new(width, ' . ') }
-    @apple = Apple.new
-  end
-
-  # Write matrix_to_string method to decrease size of print.
-  def print
-    @apple.add(15, 15)
-
-    field_string = ''
-    @length.times do |line|
-      @width.times do |column|
-        field_string << @field_matrix[line][column]
-      end
-      field_string << "\n"
-    end
-    Curses.setpos(0, 0)
-    Curses.addstr(field_string)
-    Curses.refresh
-  end
-
-  def set_center
-    horizontal_middle = @width / 2
-    vertical_middle = @length / 2
-    # Are the horizontal and vertical middles in the right order?
-    Curses.setpos(vertical_middle, horizontal_middle)
-  end
-
-  # move this method to game class?
-  def game_over
-    set_center
-    Curses.addstr('Game Over')
-    Curses.refresh
-    # What does this getch function do exactly?
-    Curses.getch
   end
 end
 
