@@ -199,7 +199,7 @@ class Game
 
       user_input = Curses.getch
       # include capital 's' in case of accidental caps lock.
-      if user_input.downcase == 's'
+      if user_input.to_s.downcase == 's'
         Curses.close_screen
         break
       end
@@ -227,7 +227,7 @@ class Game
       Curses.addstr(end_screen_string)
 
       user_input = Curses.getch
-      exit if user_input.downcase == 'e'
+      exit if user_input.to_s.downcase == 'e'
     end
   end
 
