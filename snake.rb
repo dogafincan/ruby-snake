@@ -250,11 +250,18 @@ class Game
 
     return unless snake_apple_same_location
     snake.increase_size
+    insert_apple_into_field
+  end
+
+  def insert_apple_into_field
+    apple_located_under_head = snake.locate_body.include? apple.locate
+    apple_located_under_body = snake.locate_head.include? apple.locate
+
     # Add an apple to the field. If that apple ends up below the snake's
     # body then repeat that process until it ends up outside of it.
     loop do
       @apple = Apple.new(field.width, field.length)
-      break unless snake.locate_body.include? apple.locate
+      break unless apple_located_under_head || apple_located_under_body
     end
   end
 
