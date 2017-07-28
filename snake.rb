@@ -128,36 +128,168 @@ class Apple
   end
 end
 
+# The game class prints the start and end screen of
+# the game, and animates the gameplay itself. It also
+# checks certain conditions that decide the location of
+# the snake and apple objects.
 class Game
-end
+  attr_reader :field, :snake, :apple
 
-# Should the code below be in a Game class?
-Curses.init_screen
+  def initialize
+    @field = Field.new(15, 15)
+    @snake = Snake.new(field.width)
+    @apple = Apple.new(field.width, field.length)
+  end
 
-begin
-  Curses.stdscr.keypad = true
-  Curses.noecho
-  Curses.curs_set(0)
-  Curses.timeout = 0
-  field = Field.new(15, 15)
+  def print_field
+    # Empty string variable looks ugly. Try to find a more
+    # elegant solution.
+    field_string = ''
+    field.length.times do |line|
+      field.width.times do |column|
+        field_string << field.field_matrix[line][column]
+      end
+      field_string << "\n"
+    end
 
-  loop do
-    field.print
-    sleep(0.1)
+    Curses.setpos(0, 0)
+    Curses.addstr(field_string)
+    Curses.refresh
+  end
 
-    user_input = Curses.getch
-    case user_input
-    when Curses::KEY_UP
-      snake.move_up
-    when Curses::KEY_DOWN
-      snake.move_down
-    when Curses::KEY_LEFT
-      snake.move_left
-    when Curses::KEY_RIGHT
-      snake.move_right
+  # The print_filled_field method first creates an empty field and then
+  # adds a snake matrix and an apple to that empty field matrix and
+  # prints the result.
+  def print_filled_field
+    field.create_empty_field
+
+    # Add an apple to the field.
+    field.field_matrix[apple.vertical_location][apple.horizontal_location] = ' o '
+
+    # Add a snake to the field.
+    snake.snake_matrix.each do |part|
+      field.field_matrix[part.first][part.last] = ' x '
+    end
+
+    print_field
+  end
+
+  def print_start_screen
+    start_screen_string =
+
+      "    ___   ____ ____    ____              _              \n"\
+      "   / _ \\ / ___|  _ \\  / ___| _ __   __ _| | _____     \n"\
+      "  | | | | |  _| | | | \\___ \\| '_ \\ / _` | |/ / _ \\  \n"\
+      "  | |_| | |_| | |_| |  ___) | | | | (_| |   <  __/      \n"\
+      "   \\___/ \\____|____/  |____/|_| |_|\\__,_|_|\\_\\___| \n"\
+      "                                                        \n"\
+      '             Press [s] to start game                      '
+
+    loop do
+      Curses.curs_set(0)
+      Curses.noecho
+      Curses.setpos(0, 0)
+      Curses.addstr(start_screen_string)
+
+      user_input = Curses.getch
+      # include capital 's' in case of accidental caps lock.
+      if user_input == 's'
+        Curses.close_screen
+        break
+      end
     end
   end
-  # field.game_over
-ensure
-  Curses.close_screen
+
+  def print_end_screen
+    Curses.close_screen
+    end_screen_string =
+      "   ____                         ___                          \n"\
+      "  / ___| __ _ _ __ ___   ___   / _ \\__   _____ _ __         \n"\
+      " | |  _ / _` | '_ ` _ \\ / _ \\ | | | \\ \\ / / _ \\ '__|    \n"\
+      " | |_| | (_| | | | | | |  __/ | |_| |\\ V /  __/ |           \n"\
+      "  \\____|\\__,_|_| |_| |_|\\___|  \\___/  \\_/ \\___|_|      \n"\
+      "                                                             \n"\
+      '             Press [e] to exit game                            '
+
+    loop do
+      Curses.curs_set(0)
+      Curses.noecho
+      Curses.setpos(0, 0)
+      Curses.addstr(end_screen_string)
+
+      user_input = Curses.getch
+      # include capital 'e' in case of accidental caps lock.
+      exit if user_input == 'e'
+    end
+  end
+
+  def check_game_conditions
+    snake_touches_field_edge
+    snake_eats_apple
+    snake_touches_own_body
+  end
+
+  def snake_touches_field_edge
+    snake_touches_right_edge = snake.head_horizontal_location > field.width - 1
+    snake_touches_left_edge = snake.head_horizontal_location < 0
+    snake_touches_bottom_edge = snake.head_vertical_location  > field.length - 1
+    snake_touches_top_edge = snake.head_vertical_location < 0
+
+    snake.update_head_horizontal_location(0) if snake_touches_right_edge
+    snake.update_head_horizontal_location(field.width - 1) if snake_touches_left_edge
+    snake.update_head_vertical_location(0) if snake_touches_bottom_edge
+    snake.update_head_vertical_location(field.length - 1) if snake_touches_top_edge
+  end
+
+  def snake_eats_apple
+    snake_apple_vertical_touch = snake.head_vertical_location == apple.vertical_location
+    snake_apple_horizontal_touch = snake.head_horizontal_location == apple.horizontal_location
+    snake_apple_same_location = snake_apple_vertical_touch && snake_apple_horizontal_touch
+
+    return unless snake_apple_same_location
+    snake.increase_size
+    # fix bug that makes apples appear within the body of the snake.
+    @apple = Apple.new(field.width, field.length)
+  end
+
+  def snake_touches_own_body
+    print_end_screen if snake.locate_body.include? snake.locate_head
+  end
+
+  # The animate_game method prints the filled field first, then it allows the
+  # user to change the snake's direction, then moves the snake one frame,
+  # and finally checks for conditions that change the circumstances of the game.
+  # All of this is done repeatedly until the game ends.
+  def animate_game
+    begin
+      Curses.stdscr.keypad = true
+      Curses.noecho
+      Curses.curs_set(0)
+      Curses.timeout = 0
+
+      loop do
+        print_filled_field
+        # Add a sleep method with a value of 0.1 to prevent the snake from
+        # moving too fast (or perhaps too slow, depending on the computer).
+        # Adjust the value of sleep to speed up or slow down the game.
+        sleep(0.1)
+        snake.change_direction
+        snake.move_one_frame
+        check_game_conditions
+      end
+
+    ensure
+      Curses.close_screen
+    end
+
+    print_end_screen
+  end
+
+  def start
+    print_start_screen
+    animate_game
+  end
 end
+
+game = Game.new
+game.start
