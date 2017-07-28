@@ -115,16 +115,14 @@ class Snake
   end
 end
 
+# The apple class creates an apple object and gives
+# that object its coordinates within the field matrix.
 class Apple
-  def initialize
-  end
+  attr_reader :horizontal_location, :vertical_location
 
-  def add(length, width)
-    loop do
-      vertical_location = rand(length)
-      horizontal_location = rand(width)
-      field.field_matrix[vertical_location][horizontal_location] = ' o '
-    end
+  def initialize(field_width, field_height)
+    @horizontal_location = Random.rand(field_width - 1)
+    @vertical_location = Random.rand(field_height - 1)
   end
 end
 
