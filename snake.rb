@@ -1,5 +1,8 @@
 require 'curses'
 
+# The field class is responsible for creating a field matrix
+# which can be used by other classes to add snake and apple
+# objects.
 class Field
   attr_reader :length, :width, :field_matrix
 
@@ -9,6 +12,8 @@ class Field
     create_field
   end
 
+  # The create_field method creates a two-dimensional array. One
+  # comprising the rows of the field matrix, and the other the columns.
   def create_field
     @field_matrix = Array.new(length) { Array.new(width, ' . ') }
   end
