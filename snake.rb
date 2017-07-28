@@ -77,6 +77,8 @@ class Snake
   end
 
   def change_direction
+    # The game ends when the snake tries to move in its opposite direction.
+    # I consider this a bug which should be fixed.
     user_input = Curses.getch
     case user_input
     when Curses::KEY_UP
