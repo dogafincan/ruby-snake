@@ -9,12 +9,12 @@ class Field
   def initialize(width, length)
     @length = length
     @width = width
-    create_field
+    create_empty_field
   end
 
-  # The create_field method creates a two-dimensional array. One
+  # The create_empty_field method creates a two-dimensional array. One
   # comprising the rows of the field matrix, and the other the columns.
-  def create_field
+  def create_empty_field
     @field_matrix = Array.new(length) { Array.new(width, ' . ') }
   end
 end
@@ -270,8 +270,8 @@ class Game
       loop do
         print_filled_field
         # Add a sleep method with a value of 0.1 to prevent the snake from
-        # moving too fast (or perhaps too slow, depending on the computer).
-        # Adjust the value of sleep to speed up or slow down the game.
+        # moving too fast. Adjust the value of sleep to speed up or slow down
+        # the game.
         sleep(0.1)
         snake.change_direction
         snake.move_one_frame
