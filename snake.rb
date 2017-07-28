@@ -254,14 +254,11 @@ class Game
   end
 
   def insert_apple_into_field
-    apple_located_under_head = snake.locate_body.include? apple.locate
-    apple_located_under_body = snake.locate_head.include? apple.locate
-
     # Add an apple to the field. If that apple ends up below the snake's
     # body then repeat that process until it ends up outside of it.
-    loop do
+    until snake.size == field.width * field.length + 1
       @apple = Apple.new(field.width, field.length)
-      break unless apple_located_under_head || apple_located_under_body
+      break unless snake.snake_matrix.include? apple.locate
     end
   end
 
