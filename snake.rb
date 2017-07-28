@@ -121,8 +121,8 @@ class Apple
   attr_reader :horizontal_location, :vertical_location
 
   def initialize(field_width, field_height)
-    @horizontal_location = Random.rand(field_width - 1)
-    @vertical_location = Random.rand(field_height - 1)
+    @horizontal_location = Random.rand(field_width)
+    @vertical_location = Random.rand(field_height)
   end
 
   def locate
