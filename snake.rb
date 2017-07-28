@@ -155,6 +155,9 @@ class Game
     end
 
     Curses.setpos(0, 0)
+    Curses.addstr("\n          Your current score is: ")
+    Curses.addstr(score_string)
+    Curses.addstr("\n")
     Curses.addstr(field_string)
     Curses.refresh
   end
@@ -185,12 +188,13 @@ class Game
       "  | |_| | |_| | |_| |  ___) | | | | (_| |   <  __/      \n"\
       "   \\___/ \\____|____/  |____/|_| |_|\\__,_|_|\\_\\___| \n"\
       "                                                        \n"\
-      '             Press [s] to start game                      '
+      "\n              Press [s] to start game                   "
 
     loop do
       Curses.curs_set(0)
       Curses.noecho
       Curses.setpos(0, 0)
+      Curses.addstr("\n")
       Curses.addstr(start_screen_string)
 
       user_input = Curses.getch
@@ -211,18 +215,30 @@ class Game
       " | |_| | (_| | | | | | |  __/ | |_| |\\ V /  __/ |           \n"\
       "  \\____|\\__,_|_| |_| |_|\\___|  \\___/  \\_/ \\___|_|      \n"\
       "                                                             \n"\
-      '             Press [e] to exit game                            '
+      "\n              Press [e] to exit game                         "
 
     loop do
       Curses.curs_set(0)
       Curses.noecho
       Curses.setpos(0, 0)
+      Curses.addstr("\n                 Your score was: ")
+      Curses.addstr(score_string)
+      Curses.addstr("\n")
       Curses.addstr(end_screen_string)
 
       user_input = Curses.getch
       # include capital 'e' in case of accidental caps lock.
       exit if user_input == 'e'
     end
+  end
+
+  def score_string
+    if snake.size == 4
+      score = 0.to_s
+    else
+      score = (((((snake.size - 4) * 100) + snake.size * 25) * snake.size) / 39).to_s
+    end
+    score << "\n"
   end
 
   def check_game_conditions
