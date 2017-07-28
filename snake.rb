@@ -77,18 +77,16 @@ class Snake
   end
 
   def change_direction
-    # The game ends when the snake tries to move in its opposite direction.
-    # I consider this a bug which should be fixed.
     user_input = Curses.getch
     case user_input
     when Curses::KEY_UP
-      @direction = :up
+      @direction = :up if direction != :down
     when Curses::KEY_DOWN
-      @direction = :down
+      @direction = :down if direction != :up
     when Curses::KEY_LEFT
-      @direction = :left
+      @direction = :left if direction != :right
     when Curses::KEY_RIGHT
-      @direction = :right
+      @direction = :right if direction != :left
     end
   end
 
