@@ -124,6 +124,10 @@ class Apple
     @horizontal_location = Random.rand(field_width - 1)
     @vertical_location = Random.rand(field_height - 1)
   end
+
+  def locate
+    [vertical_location, horizontal_location]
+  end
 end
 
 # The game class prints the start and end screen of
@@ -140,7 +144,7 @@ class Game
   end
 
   def print_field
-    # Empty string variable looks ugly. Try to find a more
+    # Empty string variables look ugly. Try to find a more
     # elegant solution.
     field_string = ''
     field.length.times do |line|
@@ -246,8 +250,12 @@ class Game
 
     return unless snake_apple_same_location
     snake.increase_size
-    # fix bug that makes apples appear within the body of the snake.
-    @apple = Apple.new(field.width, field.length)
+    # Add an apple to the field. If that apple ends up below the snake's
+    # body then repeat that process until it ends up outside of it.
+    loop do
+      @apple = Apple.new(field.width, field.length)
+      break unless snake.locate_body.include? apple.locate
+    end
   end
 
   def snake_touches_own_body
